@@ -1,0 +1,21 @@
+{
+    "songs": [
+    {
+        "songname": "The one I love",
+        "tempo": 128,
+        "programchange": 17
+    },
+    {
+        "songname": "Hard to handle",
+        "tempo": 104,
+        "programchange": 17
+    }
+    ],
+    "globalconfig":
+    {
+        "midiChannel": 3,
+        "prevSongMidiNote": 70,
+        "nextSongMidiNote": 71,
+        "resetSongMidiNote": 72
+    }
+}
