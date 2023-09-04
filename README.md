@@ -1,10 +1,21 @@
-- 👋 Hi, I’m @Phildrummer and I am a mechanical design engineer turned programmer.
+# MIDI Clock Sync and Progam Change for Band
 
-- 👀 I’m interested in Computer Aided Modeling (CAD) automation. Specifically Siemens NX.
+This application reads data from a json file, that defines the setlist of your band.
 
-- 🌱 I’m currently learning C# and Python
+The JSON file contains:
+-  Song Name
+-  Song Tempo
+-  Program Change
+-  MIDI Note for next song
+-  MIDI Note for previous song
+-  MIDI Note for setlist reset --> goes to first song in the list
+-  Global MIDI Channel
+  
+The JSON is parsed and the needed arrays are built.
 
-- 📫 You can reach me at philipcraig.carpenter@gmail.com
+When the song is changed, the program change value is sent to the **Global MIDI Channel** located in the JSON.
+
+Additionally the **Song Tempo** is sent as a **MIDI Clock** to the same **MIDI Global Channel** sychronizing all devices on that channel.
 
 <!---
 Phildrummer/Phildrummer is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
