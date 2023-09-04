@@ -16,8 +16,3 @@ The JSON is parsed and the needed arrays are built.
 When the song is changed, the program change value is sent to the **Global MIDI Channel** located in the JSON.
 
 Additionally the **Song Tempo** is sent as a **MIDI Clock** to the same **MIDI Global Channel** sychronizing all devices on that channel.
-
-<!---
-Phildrummer/Phildrummer is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
-You can click the Preview link to take a look at your changes.
---->
