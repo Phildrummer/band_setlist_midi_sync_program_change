@@ -10,6 +10,210 @@
         "tempo": 104,
         "programchange": 17
     }
+    ,
+    {
+        "songname": "All right now",
+        "tempo": 120,
+        "programchange": 17
+    }
+    ,
+    {
+        "songname": "Human",
+        "tempo": 75,
+        "programchange": 18
+    }
+    ,
+    {
+        "songname": "Cuts like a knife",
+        "tempo": 96,
+        "programchange": 17
+    }
+    ,
+    {
+        "songname": "Californication",
+        "tempo": 95,
+        "programchange": 17
+    }
+    ,
+    {
+        "songname": "Lagrange",
+        "tempo": 150,
+        "programchange": 18
+    }
+    ,
+    {
+        "songname": "Joker",
+        "tempo": 90,
+        "programchange": 17
+    }
+    ,
+    {
+        "songname": "Mit 18",
+        "tempo": 90,
+        "programchange": 17
+    }
+    ,
+    {
+        "songname": "Come together",
+        "tempo": 82,
+        "programchange": 17
+    }
+    ,
+    {
+        "songname": "Wonderwall",
+        "tempo": 90,
+        "programchange": 17
+    }
+    ,
+    {
+        "songname": "Wish you were here",
+        "tempo": 65,
+        "programchange": 17
+    }
+    ,
+    {
+        "songname": "Blue on black",
+        "tempo": 78,
+        "programchange": 17
+    }
+    ,
+    {
+        "songname": "Shout",
+        "tempo": 98,
+        "programchange": 17
+    }
+    ,
+    {
+        "songname": "Still havent found",
+        "tempo": 100,
+        "programchange": 17
+    }
+    ,
+    {
+        "songname": "Message in a bottle",
+        "tempo": 142,
+        "programchange": 17
+    }
+    ,
+    {
+        "songname": "Johnny B Goode",
+        "tempo": 150,
+        "programchange": 17
+    }
+    ,
+    {
+        "songname": "Sunday bloody Sunday",
+        "tempo": 100,
+        "programchange": 17
+    }
+    ,
+    {
+        "songname": "Hey Joe",
+        "tempo": 83,
+        "programchange": 17
+    }
+    ,
+    {
+        "songname": "Smells like teen spirit",
+        "tempo": 117,
+        "programchange": 17
+    }
+    ,
+    {
+        "songname": "Chocolate Jesus",
+        "tempo": 110,
+        "programchange": 17
+    }
+    ,
+    {
+        "songname": "One",
+        "tempo": 92,
+        "programchange": 17
+    }
+    ,
+    {
+        "songname": "Summertime",
+        "tempo": 90,
+        "programchange": 17
+    }
+    ,
+    {
+        "songname": "Personal Jesus",
+        "tempo": 130,
+        "programchange": 19
+    }
+    ,
+    {
+        "songname": "Dead or alive",
+        "tempo": 75,
+        "programchange": 17
+    }
+    ,
+    {
+        "songname": "Run to you",
+        "tempo": 130,
+        "programchange": 17
+    }
+    ,
+    {
+        "songname": "Cocaine",
+        "tempo": 105,
+        "programchange": 17
+    }
+    ,
+    {
+        "songname": "Stillness of heart",
+        "tempo": 80,
+        "programchange": 17
+    }
+    ,
+    {
+        "songname": "Passenger",
+        "tempo": 150,
+        "programchange": 17
+    }
+    ,
+    {
+        "songname": "Come as you are",
+        "tempo": 120,
+        "programchange": 17
+    }
+    ,
+    {
+        "songname": "Rolling in the deep",
+        "tempo": 105,
+        "programchange": 17
+    }
+    ,
+    {
+        "songname": "Real mother for ya",
+        "tempo": 98,
+        "programchange": 17
+    }
+    ,
+    {
+        "songname": "Money for nothing",
+        "tempo": 136,
+        "programchange": 17
+    }
+    ,
+    {
+        "songname": "Dont you",
+        "tempo": 120,
+        "programchange": 17
+    }
+    ,
+    {
+        "songname": "Tage wie diese",
+        "tempo": 97,
+        "programchange": 17
+    }
+    ,
+    {
+        "songname": "Sexy",
+        "tempo": 122,
+        "programchange": 18
+    }
     ],
     "globalconfig":
     {
