@@ -13,14 +13,6 @@ class Song:
             "tempo": self.tempo,
             "programchange": self.programchange
         }
-        
-    # Define a method to convert the instance to a JSON-serializable dictionary
-    # def to_json(self):
-    #     return {
-    #         "songname": self.songname,
-    #         "tempo": self.tempo,
-    #         "programchange": self.programchange
-    #     }
 
     # Define a class method to create an instance from a JSON dictionary
     @classmethod
