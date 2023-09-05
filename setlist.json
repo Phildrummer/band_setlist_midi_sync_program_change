@@ -218,8 +218,10 @@
     "globalconfig":
     {
         "midiChannel": 3,
-        "prevSongMidiNote": 70,
-        "nextSongMidiNote": 71,
-        "resetSongMidiNote": 72
+        "prevSongMidiNote": 80,
+        "nextSongMidiNote": 81,
+        "resetSongMidiNote": 82,
+        "midiInportName": "raspberryPort 0",
+        "midiOutportName": "raspberryPort 1"
     }
 }
