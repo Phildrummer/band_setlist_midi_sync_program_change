@@ -83,7 +83,7 @@ if __name__ == "__main__":
     print("\nGlobal Config:")
     print("MIDI Channel:",config.midiChannel,"Previous Song Note:",config.prevSongMidiNote,"Next Song Note:",config.nextSongMidiNote,"Reset Note:",config.resetSongMidiNote,"\n")
 
-    print(rtmidi.get_compiled_api()[0])
+    print(rtmidi.get_compiled_api())
     print(rtmidi.get_rtmidi_version())
 
     inPort = mido.open_input(name=config.midiInportName)
