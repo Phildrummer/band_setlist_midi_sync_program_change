@@ -72,7 +72,6 @@ if __name__ == "__main__":
     with open(json_filename, "r") as json_file:
         data = json.load(json_file)
 
-
     allSongs = [Song(song["songname"], song["tempo"], song["programchange"]) for song in data["songs"]]
     print(f"Total Count: {len(allSongs)}")
     print("\nSongs:")
@@ -82,7 +81,10 @@ if __name__ == "__main__":
     globalconfig = data["globalconfig"]
     config = GlobalConfig(globalconfig['midiChannel'],globalconfig['prevSongMidiNote'],globalconfig['nextSongMidiNote'],globalconfig['resetSongMidiNote'], globalconfig['midiInportName'], globalconfig['midiOutportName'])
     print("\nGlobal Config:")
-    print("MIDI Channel:",config.midiChannel,"Previous Song Note:",config.prevSongMidiNote,"Next Song Note:",config.nextSongMidiNote,"Reset Note:",config.resetSongMidiNote)
+    print("MIDI Channel:",config.midiChannel,"Previous Song Note:",config.prevSongMidiNote,"Next Song Note:",config.nextSongMidiNote,"Reset Note:",config.resetSongMidiNote,"\n")
+
+    print(rtmidi.get_compiled_api()[0])
+    print(rtmidi.get_rtmidi_version())
 
     inPort = mido.open_input(name=config.midiInportName)
     outPort = mido.open_output(config.midiOutportName)
