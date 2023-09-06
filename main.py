@@ -64,6 +64,9 @@ if __name__ == "__main__":
 
     # Get the current working directory
     current_directory = os.getcwd()
+    print("Current Working Dir:",current_directory,"\n")
+
+    print(mido.get_output_names())
     
     # Define the filename for the JSON file
     json_filename = os.path.join(current_directory, "setlist.json")
