@@ -2,7 +2,6 @@ from DataObjects import Song
 from DataObjects import GlobalConfig
 import json
 import os
-import rtmidi
 import mido
 import datetime
 import time
