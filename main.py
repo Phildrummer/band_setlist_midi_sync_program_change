@@ -83,7 +83,7 @@ if __name__ == "__main__":
         inPort = mido.open_input(name=config.midiInportName)
     except Exception as e:
         print("Port" + config.midiInportName + " not found", e, "\nexiting script")
-        sys.exit()            
+        sys.exit()     # some change       
 
     try:
         outPort = mido.open_output(config.midiOutportName)
