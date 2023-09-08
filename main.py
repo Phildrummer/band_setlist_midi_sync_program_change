@@ -60,6 +60,12 @@ if __name__ == "__main__":
     # Get the current working directory
     current_directory = os.getcwd()
     print("Current Working Dir:",current_directory,"\n")
+
+    try:
+        print("Output names: ",mido.get_output_names())
+    except Exception as e:
+        print(e)
+        sys.exit()
     
     # Define the filename for the JSON file
     json_filename = os.path.join(current_directory, "setlist.json")
@@ -69,7 +75,7 @@ if __name__ == "__main__":
         data = json.load(json_file)
 
     allSongs = [Song(song["songname"], song["tempo"], song["programchange"]) for song in data["songs"]]
-    print(f"Total Count: {len(allSongs)}")
+    print(f"\nTotal Song Count: {len(allSongs)}")
     print("\nSongs:")
     for theSong in allSongs:
         print("Song Name:",theSong.songname,"Song Tempo:",theSong.tempo,"Program Change:",theSong.programchange)
