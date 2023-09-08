@@ -82,13 +82,13 @@ if __name__ == "__main__":
     try:
         inPort = mido.open_input(name=config.midiInportName)
     except Exception as e:
-        print("Port" + config.midiInportName + " not found", e, "\nexiting script")
-        sys.exit()     # some change       
+        print(e, "\nexiting script")
+        sys.exit()       
 
     try:
         outPort = mido.open_output(config.midiOutportName)
     except Exception as e:
-        print("Port" + config.midiOutportName + " not found", e, "\nexiting script")
+        print(e, "\nexiting script")
         sys.exit()
 
     pc = mido.Message(type='program_change',channel=config.midiChannel-1,program=allSongs[currentIdx].programchange)
