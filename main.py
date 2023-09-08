@@ -1,11 +1,6 @@
 from DataObjects import Song
 from DataObjects import GlobalConfig
-import json
-import os
-import mido
-import mido.backends.rtmidi
-import datetime
-import time
+import json, os, mido, mido.backends.rtmidi, time, sys
 
 currentIdx = 0
 
@@ -65,10 +60,6 @@ if __name__ == "__main__":
     # Get the current working directory
     current_directory = os.getcwd()
     print("Current Working Dir:",current_directory,"\n")
-    try:        
-        print(mido.get_output_names())
-    except Exception as e:
-        print(e)
     
     # Define the filename for the JSON file
     json_filename = os.path.join(current_directory, "setlist.json")
@@ -88,8 +79,17 @@ if __name__ == "__main__":
     print("\nGlobal Config:")
     print("MIDI Channel:",config.midiChannel,"Previous Song Note:",config.prevSongMidiNote,"Next Song Note:",config.nextSongMidiNote,"Reset Note:",config.resetSongMidiNote,"\n")
 
-    inPort = mido.open_input(name=config.midiInportName)
-    outPort = mido.open_output(config.midiOutportName)
+    try:
+        inPort = mido.open_input(name=config.midiInportName)
+    except Exception as e:
+        print("Port" + config.midiInportName + " not found", e, "\nexiting script")
+        sys.exit()            
+
+    try:
+        outPort = mido.open_output(config.midiOutportName)
+    except Exception as e:
+        print("Port" + config.midiOutportName + " not found", e, "\nexiting script")
+        sys.exit()
 
     pc = mido.Message(type='program_change',channel=config.midiChannel-1,program=allSongs[currentIdx].programchange)
     outPort.send(pc)
