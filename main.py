@@ -99,6 +99,7 @@ if __name__ == "__main__":
         sys.exit()
 
     pc = mido.Message(type='program_change',channel=config.midiChannel-1,program=allSongs[currentIdx].programchange)
+    print("Initial Song: ", pc)
     outPort.send(pc)
 
     try:          
@@ -106,7 +107,7 @@ if __name__ == "__main__":
             print(f"Raspberry Pi is listening for MIDI messages on {inPort.name}...")
             for msg in inPort:
                 print(msg)
-                if msg.type == 'note_off' or msg.type == 'program_change':
+                if msg.type == 'note_on' or msg.type == 'program_change':
                     if outPort.closed == True:
                         outPort._open()
                     currentIdx = midiNoteListenerCallBack(msg, currentIdx)
