@@ -105,6 +105,7 @@ if __name__ == "__main__":
         while inPort != None:
             print(f"Raspberry Pi is listening for MIDI messages on {inPort.name}...")
             for msg in inPort:
+                print(msg)
                 if msg.type == 'note_off' or msg.type == 'program_change':
                     if outPort.closed == True:
                         outPort._open()
