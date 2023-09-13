@@ -84,6 +84,7 @@ if __name__ == "__main__":
     config = GlobalConfig(globalconfig['midiChannel'],globalconfig['prevSongMidiNote'],globalconfig['nextSongMidiNote'],globalconfig['resetSongMidiNote'], globalconfig['midiInportName'], globalconfig['midiOutportName'])
     print("\nGlobal Config:")
     print("MIDI Channel:",config.midiChannel,"Previous Song Note:",config.prevSongMidiNote,"Next Song Note:",config.nextSongMidiNote,"Reset Note:",config.resetSongMidiNote,"\n")
+    print(mido.get_output_names())
 
     try:
         inPort = mido.open_input(name=config.midiInportName)
