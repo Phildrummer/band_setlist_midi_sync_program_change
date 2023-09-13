@@ -7,7 +7,7 @@ currentIdx = 0
 def midiNoteListenerCallBack(msg, idx):
     try:
         if msg.channel == config.midiChannel - 1:
-            if msg.type == 'note_off':
+            if msg.type == 'note_on':
                 if msg.note == config.prevSongMidiNote:
                     # go to previous song in the list
                     if idx == 0: #if the current song is the first one in the list
