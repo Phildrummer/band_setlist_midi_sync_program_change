@@ -3,37 +3,6 @@ from DataObjects import GlobalConfig
 import json, os, mido, mido.backends.rtmidi, time, sys
 
 currentIdx = 0
-
-def midiNoteListenerCallBack(msg, idx):
-    try:
-        if msg.channel == config.midiChannel - 1:
-            if msg.type == 'note_on' and msg.velocity > 0:
-                if msg.note == config.prevSongMidiNote:
-                    # go to previous song in the list
-                    if idx == 0: #if the current song is the first one in the list
-                        idx = len(allSongs)-1
-                    else:
-                        idx = idx - 1
-                elif msg.note == config.nextSongMidiNote:
-                    # go to next song in the list
-                    if idx == len(allSongs)-1: # if the current song is the last one in the list
-                        idx = 0
-                    else:
-                        idx = idx + 1
-                elif msg.note == config.resetSongMidiNote:
-                    # go to first song in the list
-                    idx = 0
-
-                pc = mido.Message(type='program_change',channel=config.midiChannel-1,program=allSongs[idx].programchange-1)
-                print (f"PROCESSING: Changing kit to {allSongs[idx].songname}")
-                outPort.send(pc)
-                print (f"DONE: Changed kit to {allSongs[idx].songname}")
-                sendMidiClock(allSongs[idx])
-    except Exception as e:
-        print(f"\n{e}")
-        idx = -1    
-        
-    return idx
         
 def sendMidiClock(song: Song):
     try:
@@ -104,7 +73,7 @@ if __name__ == "__main__":
     
     try:          
         while inPort != None:
-            print(f"Raspberry Pi is listening for MIDI messages on {inPort.name}...")
+            print(f"PROCESSING: Raspberry Pi is listening for MIDI messages on {inPort.name}...")
             for msg in inPort:
                 print(msg)
                 if outPort.closed == True:
@@ -132,11 +101,10 @@ if __name__ == "__main__":
                         outPort.send(pc)
                         print (f"DONE: Changed kit to {allSongs[currentIdx].songname}")
                         sendMidiClock(allSongs[currentIdx])
+                        print(f"PROCESSING: Raspberry Pi is listening for MIDI messages on {inPort.name}...")
                         if currentIdx == -1:
                             print("There was an error above.")
                             break
-                # elif msg.type == 'program_change':
-                #     sendMidiClock(allSongs[currentIdx])
     except KeyboardInterrupt:
         print("\nStopped by user.")
     except Exception as e:
