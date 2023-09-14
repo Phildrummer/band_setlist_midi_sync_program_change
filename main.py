@@ -115,7 +115,8 @@ if __name__ == "__main__":
     # find the spd-sx port name
     portName = ""
     for foundName in outPutNames:
-        if "SPS-SX" in foundName and "MIDI" not in foundName:
+        print(f"Port Name: {foundName}")
+        if "SPD-SX" in foundName and "MIDI" not in foundName:
             portName = foundName
             break
     # Check if any matching string was found
