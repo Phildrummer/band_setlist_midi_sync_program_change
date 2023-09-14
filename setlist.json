@@ -1,6 +1,11 @@
 {
     "songs": [
         {
+            "songname": "TEST",
+            "tempo": 10,
+            "programchange": 80
+        },
+        {
             "songname": "The one I love",
             "tempo": 128,
             "programchange": 17
