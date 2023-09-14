@@ -21,7 +21,6 @@ def midiNoteListenerCallBack(msg, idx):
                         idx = 0
                     else:
                         idx = idx + 1
-                        print("Song idx (next song): ",idx)
                 elif msg.note == config.resetSongMidiNote:
                     # go to first song in the list
                     idx = 0
@@ -29,9 +28,9 @@ def midiNoteListenerCallBack(msg, idx):
                 pc = mido.Message(type='program_change',channel=config.midiChannel-1,program=allSongs[idx].programchange-1)
                 outPort.send(pc)
                 print (f"Changing kit to {allSongs[idx].songname}")
-            elif msg.type == 'program_change':
+            #elif msg.type == 'program_change':
                 #sendMidiClock(allSongs[idx])
-                print(f"Raspberry Pi is listening for MIDI messages on {inPort.name}...")
+                #print(f"Raspberry Pi is listening for MIDI messages on {inPort.name}...")
     except Exception as e:
         print(f"\n{e}")
         idx = -1    
@@ -109,7 +108,7 @@ if __name__ == "__main__":
             print(f"Raspberry Pi is listening for MIDI messages on {inPort.name}...")
             for msg in inPort:
                 print(msg)
-                if msg.type == 'note_on' or msg.type == 'program_change':
+                if msg.type == 'note_on':
                     print("Msg Type: ",msg.type)
                     if outPort.closed == True:
                         outPort._open()
@@ -117,6 +116,8 @@ if __name__ == "__main__":
                     if currentIdx == -1:
                         print("There was an error above.")
                         break
+                elif msg.type == 'program_change':
+                    sendMidiClock(allSongs[currentIdx])
     except KeyboardInterrupt:
         print("\nStopped by user.")
     except Exception as e:
