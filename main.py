@@ -1,6 +1,8 @@
 from DataObjects import Song
 from DataObjects import GlobalConfig
 import json, os, mido, mido.backends.rtmidi, time, sys
+# Docs: https://docs.python.org/3/library/threading.html#timer-objects
+from threading import Timer
 
 currentIdx = 0
 
