@@ -8,7 +8,6 @@ def midiNoteListenerCallBack(msg, idx):
     try:
         if msg.channel == config.midiChannel - 1:
             if msg.type == 'note_on' and msg.velocity > 0:
-                print("Song idx: ",idx)
                 if msg.note == config.prevSongMidiNote:
                     # go to previous song in the list
                     if idx == 0: #if the current song is the first one in the list
@@ -26,12 +25,10 @@ def midiNoteListenerCallBack(msg, idx):
                     idx = 0
 
                 pc = mido.Message(type='program_change',channel=config.midiChannel-1,program=allSongs[idx].programchange-1)
+                print (f"PROCESSING: Changing kit to {allSongs[idx].songname}")
                 outPort.send(pc)
-                print (f"Changing kit to {allSongs[idx].songname}")
-                sendMidiClock(allSongs[currentIdx])
-            #elif msg.type == 'program_change':
-                #sendMidiClock(allSongs[idx])
-                #print(f"Raspberry Pi is listening for MIDI messages on {inPort.name}...")
+                print (f"DONE: Changed kit to {allSongs[idx].songname}")
+                sendMidiClock(allSongs[idx])
     except Exception as e:
         print(f"\n{e}")
         idx = -1    
@@ -43,7 +40,7 @@ def sendMidiClock(song: Song):
         # Calculate the time interval (in seconds) between MIDI clock messages based on the tempo
         interval = 60.0 / (song.tempo * 24)  # 24 MIDI clock messages per quarter note
         with outPort:
-            print(f"Sending MIDI clock messages on {outPort.name} for Song:",f"{song.songname}",f"Tempo: {song.tempo}","...")
+            print(f"PROCESSING: Sending MIDI clock messages on {outPort.name} for Song:",f"{song.songname}",f"Tempo: {song.tempo}","...")
             # Send MIDI clock messages periodically to simulate the tempo
             totalTime = 0
             while True:
@@ -51,8 +48,8 @@ def sendMidiClock(song: Song):
                 outPort.send(msg)
                 time.sleep(interval)
                 totalTime = totalTime + interval
-                if totalTime > 10:
-                    print(f"Stopped sending MIDI clock messages on {outPort.name}...")
+                if totalTime > 15:
+                    print(f"SONE: Stopped sending MIDI clock messages on {outPort.name}...")
                     break
     except Exception as e:
         print(f"\n{e}")
@@ -104,17 +101,9 @@ if __name__ == "__main__":
     print("Initial Song: ", pc)
     outPort.send(pc)
 
-    # try:
-    #     thruPort = mido.open_output('Midi Through:Midi Through Port-0 14:0')
-    # except Exception as e:
-    #     print(e, "\nNo thru port. Exiting script")
-    #     sys.exit()
-
     try:          
         while inPort != None:
             print(f"Raspberry Pi is listening for MIDI messages on {inPort.name}...")
-            # for thruMsg in thruPort:
-            #     print(thruMsg)
             for msg in inPort:
                 print(msg)
                 if outPort.closed == True:
