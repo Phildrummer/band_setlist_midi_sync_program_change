@@ -190,8 +190,6 @@
         "midiChannel": 3,
         "prevSongMidiNote": 76,
         "nextSongMidiNote": 78,
-        "resetSongMidiNote": 74,
-        "midiInportName": "SPD-SX:SPD-SX Control 20:0",
-        "midiOutportName": "SPD-SX:SPD-SX Control 20:0"
+        "resetSongMidiNote": 74
     }
 }

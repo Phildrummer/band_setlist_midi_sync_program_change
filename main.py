@@ -133,8 +133,7 @@ if __name__ == "__main__":
         except Exception as e:
             print(e, "\nexiting script")
             sys.exit()
-        else:
-            print("No matching string found")
+
     else:
         print(e, "\nNo SPD-SX found. Exiting script")
         sys.exit()
