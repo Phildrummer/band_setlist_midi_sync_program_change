@@ -17,7 +17,7 @@ def sendMidiClock(song: Song):
                 outPort.send(msg)
                 time.sleep(interval)
                 totalTime = totalTime + interval
-                if totalTime > 3:
+                if totalTime > 15:
                     print(f"DONE: Stopped sending MIDI clock messages on {outPort.name}...")
                     break
     except Exception as e:
