@@ -48,8 +48,8 @@ def sendMidiClock(song: Song):
                 outPort.send(msg)
                 time.sleep(interval)
                 totalTime = totalTime + interval
-                if totalTime > 15:
-                    print(f"SONE: Stopped sending MIDI clock messages on {outPort.name}...")
+                if totalTime > 3:
+                    print(f"DONE: Stopped sending MIDI clock messages on {outPort.name}...")
                     break
     except Exception as e:
         print(f"\n{e}")
@@ -109,11 +109,32 @@ if __name__ == "__main__":
                 print(msg)
                 if outPort.closed == True:
                     outPort._open()
-                if msg.type == 'note_on':
-                    currentIdx = midiNoteListenerCallBack(msg, currentIdx)
-                    if currentIdx == -1:
-                        print("There was an error above.")
-                        break
+                if msg.channel == config.midiChannel - 1:
+                    if msg.type == 'note_on' and msg.velocity == 0:
+                        if msg.note == config.prevSongMidiNote:
+                        # go to previous song in the list
+                            if currentIdx == 0: #if the current song is the first one in the list
+                                currentIdx = len(allSongs)-1
+                            else:
+                                currentIdx = currentIdx - 1
+                        elif msg.note == config.nextSongMidiNote:
+                            # go to next song in the list
+                            if currentIdx == len(allSongs)-1: # if the current song is the last one in the list
+                                currentIdx = 0
+                            else:
+                                currentIdx = currentIdx + 1
+                        elif msg.note == config.resetSongMidiNote:
+                            # go to first song in the list
+                            currentIdx = 0
+
+                        pc = mido.Message(type='program_change',channel=config.midiChannel-1,program=allSongs[currentIdx].programchange-1)
+                        print (f"PROCESSING: Changing kit to {allSongs[currentIdx].songname}")
+                        outPort.send(pc)
+                        print (f"DONE: Changed kit to {allSongs[currentIdx].songname}")
+                        sendMidiClock(allSongs[currentIdx])
+                        if currentIdx == -1:
+                            print("There was an error above.")
+                            break
                 # elif msg.type == 'program_change':
                 #     sendMidiClock(allSongs[currentIdx])
     except KeyboardInterrupt:
