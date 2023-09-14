@@ -18,17 +18,17 @@ def send_clock_pulse(port):
     print("F8")
     port.send(mido.Message('clock'))
 
-def sendMidiClock2(song: Song):
+def sendMidiClock2(port, song: Song):
         # Prepare
     interval: float = 60.0 / (song.tempo * 24)  # In seconds
-    if outPort == None:
-        outPort = mido.open_output(config.midiOutportName)
+    if port == None:
+        port = mido.open_output(config.midiOutportName)
     else:
-        if outPort.closed == True:
-            outPort._open()
+        if port.closed == True:
+            port._open()
 
     timer = RepeatTimer(
-        interval=interval, function=send_clock_pulse, args=[outPort]
+        interval=interval, function=send_clock_pulse, args=[port]
     )
 
     # Launch
@@ -105,7 +105,7 @@ if __name__ == "__main__":
     print("Initial Song: ", pc)
     outPort.send(pc)
     #sendMidiClock(allSongs[currentIdx])
-    sendMidiClock2(allSongs[currentIdx])
+    sendMidiClock2(outPort, allSongs[currentIdx])
     
     try:          
         while inPort != None:
