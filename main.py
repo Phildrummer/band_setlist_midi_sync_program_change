@@ -112,20 +112,23 @@ if __name__ == "__main__":
     print(mido.get_output_names())
     # get the in- and outport names
     outPutNames = mido.get_output_names()
-    # Use a list comprehension to filter the strings
-    result = [s for s in outPutNames if "SPS-SX" in s and "MIDI" not in s]
-
+    # find the spd-sx port name
+    portName = ""
+    for foundName in outPutNames:
+        if "SPS-SX" in foundName and "MIDI" not in foundName:
+            portName = foundName
+            break
     # Check if any matching string was found
-    if result:
-        print("Found the SPD-SX ports:", result[0])
+    if portName != "":
+        print("Found the SPD-SX ports:", portName)
         try:
-            inPort = mido.open_input(result[0])
+            inPort = mido.open_input(portName)
         except Exception as e:
             print(e, "\nexiting script")
             sys.exit()       
 
         try:
-            outPort = mido.open_output(result[0])
+            outPort = mido.open_output(portName)
         except Exception as e:
             print(e, "\nexiting script")
             sys.exit()
