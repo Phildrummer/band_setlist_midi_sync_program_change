@@ -28,6 +28,7 @@ def midiNoteListenerCallBack(msg, idx):
                 pc = mido.Message(type='program_change',channel=config.midiChannel-1,program=allSongs[idx].programchange-1)
                 outPort.send(pc)
                 print (f"Changing kit to {allSongs[idx].songname}")
+                sendMidiClock(allSongs[currentIdx])
             #elif msg.type == 'program_change':
                 #sendMidiClock(allSongs[idx])
                 #print(f"Raspberry Pi is listening for MIDI messages on {inPort.name}...")
@@ -103,15 +104,22 @@ if __name__ == "__main__":
     print("Initial Song: ", pc)
     outPort.send(pc)
 
+    try:
+        thruPort = mido.open_output('Midi Through:Midi Through Port-0 14:0')
+    except Exception as e:
+        print(e, "\nNo thru port. Exiting script")
+        sys.exit()
+
     try:          
         while inPort != None:
             print(f"Raspberry Pi is listening for MIDI messages on {inPort.name}...")
+            for thruMsg in thruPort:
+                print(thruMsg)
             for msg in inPort:
                 print(msg)
+                if outPort.closed == True:
+                    outPort._open()
                 if msg.type == 'note_on':
-                    print("Msg Type: ",msg.type)
-                    if outPort.closed == True:
-                        outPort._open()
                     currentIdx = midiNoteListenerCallBack(msg, currentIdx)
                     if currentIdx == -1:
                         print("There was an error above.")
