@@ -3,6 +3,7 @@ from DataObjects import GlobalConfig
 import json, os, mido, mido.backends.rtmidi, time, sys
 # Docs: https://docs.python.org/3/library/threading.html#timer-objects
 from threading import Timer
+from mido.ports import BaseOutput
 
 currentIdx = 0
 outPort = None
@@ -13,6 +14,49 @@ class RepeatTimer(Timer):
         while not self.finished.wait(self.interval):
             self.function(*self.args, **self.kwargs)
 
+class ClockTimer:
+    timer = None
+    _tempo: int
+
+    @classmethod
+    def send_clock_pulse(cls, port: BaseOutput):
+        #print("F8")
+        port.send(mido.Message('clock'))
+
+    @property
+    def interval(self):
+        return 60.0 / (self.tempo * 24)  # In seconds
+
+    @property
+    def tempo(self):
+        return self._tempo
+
+    @tempo.setter
+    def tempo(self, value):
+        self._tempo = value
+        if self.timer:
+            self.timer.interval = self.interval
+
+    def __init__(self, out_port, tempo):
+        self.tempo = tempo
+        self.out_port = out_port
+        self.timer = RepeatTimer(
+            interval=self.interval,
+            function=self.send_clock_pulse,
+            args=[self.out_port]
+        )
+
+    def start(self):
+        self.timer.start()
+
+    def stop(self):
+        self.timer.cancel()
+
+def sendMidiClock3(song: Song):
+    clock = ClockTimer(outPort, tempo=song.tempo)
+    clock.start()
+    time.sleep(10)
+    clock.stop()
 
 def send_clock_pulse(port):
     #print("F8")
@@ -106,7 +150,9 @@ if __name__ == "__main__":
     print("Initial Song: ", pc)
     outPort.send(pc)
     #sendMidiClock(allSongs[currentIdx])
-    sendMidiClock2(outPort, allSongs[currentIdx])
+    #sendMidiClock2(outPort, allSongs[currentIdx])
+    sendMidiClock3(allSongs[currentIdx])
+
     
     try:          
         while inPort != None:
