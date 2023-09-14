@@ -100,15 +100,15 @@ if __name__ == "__main__":
         data = json.load(json_file)
 
     allSongs = [Song(song["songname"], song["tempo"], song["programchange"]) for song in data["songs"]]
-    print(f"\nTotal Song Count: {len(allSongs)}")
-    print("\nSongs:")
+    #print(f"\nTotal Song Count: {len(allSongs)}")
+    #print("\nSongs:")
     for theSong in allSongs:
         print("Song Name:",theSong.songname,"Song Tempo:",theSong.tempo,"Program Change:",theSong.programchange)
     
     globalconfig = data["globalconfig"]
     config = GlobalConfig(globalconfig['midiChannel'],globalconfig['prevSongMidiNote'],globalconfig['nextSongMidiNote'],globalconfig['resetSongMidiNote'], globalconfig['midiInportName'], globalconfig['midiOutportName'])
-    print("\nGlobal Config:")
-    print("MIDI Channel:",config.midiChannel,"Previous Song Note:",config.prevSongMidiNote,"Next Song Note:",config.nextSongMidiNote,"Reset Note:",config.resetSongMidiNote,"\n")
+    #print("\nGlobal Config:")
+    #print("MIDI Channel:",config.midiChannel,"Previous Song Note:",config.prevSongMidiNote,"Next Song Note:",config.nextSongMidiNote,"Reset Note:",config.resetSongMidiNote,"\n")
     print(mido.get_output_names())
 
     try:
@@ -127,7 +127,6 @@ if __name__ == "__main__":
     print("Initial Song: ", pc)
     outPort.send(pc)
     #sendMidiClock(allSongs[currentIdx])
-    #sendMidiClock2(outPort, allSongs[currentIdx])
     sendMidiClock3(allSongs[currentIdx])
 
     

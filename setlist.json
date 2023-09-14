@@ -179,6 +179,11 @@
             "songname": "Sexy",
             "tempo": 122,
             "programchange": 18
+        },
+        {
+            "songname": "Don't look back in anger",
+            "tempo": 63,
+            "programchange": 17
         }
     ],
     "globalconfig": {
