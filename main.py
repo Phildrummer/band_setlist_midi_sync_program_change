@@ -53,10 +53,12 @@ class ClockTimer:
         self.timer.cancel()
 
 def sendMidiClock3(song: Song):
+    print(f"PROCESSING: Sending MIDI clock messages on {outPort.name} for Song:",f"{song.songname}",f"Tempo: {song.tempo}","...")
     clock = ClockTimer(outPort, tempo=song.tempo)
     clock.start()
-    time.sleep(10)
+    time.sleep(10)    
     clock.stop()
+    print(f"DONE: Stopped sending MIDI clock messages on {outPort.name}...")
 
 def send_clock_pulse(port):
     #print("F8")
