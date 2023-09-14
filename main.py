@@ -102,25 +102,37 @@ if __name__ == "__main__":
     allSongs = [Song(song["songname"], song["tempo"], song["programchange"]) for song in data["songs"]]
     #print(f"\nTotal Song Count: {len(allSongs)}")
     #print("\nSongs:")
-    for theSong in allSongs:
-        print("Song Name:",theSong.songname,"Song Tempo:",theSong.tempo,"Program Change:",theSong.programchange)
+    #for theSong in allSongs:
+        #print("Song Name:",theSong.songname,"Song Tempo:",theSong.tempo,"Program Change:",theSong.programchange)
     
     globalconfig = data["globalconfig"]
     config = GlobalConfig(globalconfig['midiChannel'],globalconfig['prevSongMidiNote'],globalconfig['nextSongMidiNote'],globalconfig['resetSongMidiNote'], globalconfig['midiInportName'], globalconfig['midiOutportName'])
     #print("\nGlobal Config:")
     #print("MIDI Channel:",config.midiChannel,"Previous Song Note:",config.prevSongMidiNote,"Next Song Note:",config.nextSongMidiNote,"Reset Note:",config.resetSongMidiNote,"\n")
     print(mido.get_output_names())
+    # get the in- and outport names
+    outPutNames = mido.get_output_names()
+    # Use a list comprehension to filter the strings
+    result = [s for s in outPutNames if "SPS-SX" in s and "MIDI" not in s]
 
-    try:
-        inPort = mido.open_input(name=config.midiInportName)
-    except Exception as e:
-        print(e, "\nexiting script")
-        sys.exit()       
+    # Check if any matching string was found
+    if result:
+        print("Found the SPD-SX ports:", result[0])
+        try:
+            inPort = mido.open_input(result[0])
+        except Exception as e:
+            print(e, "\nexiting script")
+            sys.exit()       
 
-    try:
-        outPort = mido.open_output(config.midiOutportName)
-    except Exception as e:
-        print(e, "\nexiting script")
+        try:
+            outPort = mido.open_output(result[0])
+        except Exception as e:
+            print(e, "\nexiting script")
+            sys.exit()
+        else:
+            print("No matching string found")
+    else:
+        print(e, "\nNo SPD-SX found. Exiting script")
         sys.exit()
 
     pc = mido.Message(type='program_change',channel=config.midiChannel-1,program=allSongs[currentIdx].programchange-1)
