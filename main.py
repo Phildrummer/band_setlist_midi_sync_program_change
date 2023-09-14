@@ -3,7 +3,38 @@ from DataObjects import GlobalConfig
 import json, os, mido, mido.backends.rtmidi, time, sys
 
 currentIdx = 0
-        
+
+class RepeatTimer(Timer):
+    def run(self):
+        while not self.finished.wait(self.interval):
+            self.function(*self.args, **self.kwargs)
+
+
+def send_clock_pulse(port):
+    print("F8")
+    port.send(mido.Message('clock'))
+
+def sendMidiClock2(song: Song):
+        # Prepare
+    interval: float = 60.0 / (song.tempo * 24)  # In seconds
+    if outPort == None:
+        outPort = mido.open_output(config.midiOutportName)
+    else:
+        if outPort.closed == True:
+            outPort._open()
+
+    timer = RepeatTimer(
+        interval=interval, function=send_clock_pulse, args=[outPort]
+    )
+
+    # Launch
+    timer.start()
+    # run clock for some seconds and then close
+    time.sleep(15)
+    timer.cancel()
+    print(f"DONE: Stopped sending MIDI clock messages on {outPort.name}...")
+    
+
 def sendMidiClock(song: Song):
     try:
         # Calculate the time interval (in seconds) between MIDI clock messages based on the tempo
@@ -69,7 +100,8 @@ if __name__ == "__main__":
     pc = mido.Message(type='program_change',channel=config.midiChannel-1,program=allSongs[currentIdx].programchange-1)
     print("Initial Song: ", pc)
     outPort.send(pc)
-    sendMidiClock(allSongs[currentIdx])
+    #sendMidiClock(allSongs[currentIdx])
+    sendMidiClock2(allSongs[currentIdx])
     
     try:          
         while inPort != None:
