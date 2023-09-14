@@ -20,7 +20,7 @@ def send_clock_pulse(port):
 
 def sendMidiClock2(port, song: Song):
     # Prepare
-    interval: float = 60.0 / (song.tempo * 24)  # In seconds
+    interval: float = 60.0 / (song.tempo * 25)  # In seconds
     if port == None:
         port = mido.open_output(config.midiOutportName)
     else:
