@@ -100,7 +100,8 @@ if __name__ == "__main__":
     pc = mido.Message(type='program_change',channel=config.midiChannel-1,program=allSongs[currentIdx].programchange-1)
     print("Initial Song: ", pc)
     outPort.send(pc)
-
+    sendMidiClock(allSongs[currentIdx])
+    
     try:          
         while inPort != None:
             print(f"Raspberry Pi is listening for MIDI messages on {inPort.name}...")
@@ -113,8 +114,8 @@ if __name__ == "__main__":
                     if currentIdx == -1:
                         print("There was an error above.")
                         break
-                elif msg.type == 'program_change':
-                    sendMidiClock(allSongs[currentIdx])
+                # elif msg.type == 'program_change':
+                #     sendMidiClock(allSongs[currentIdx])
     except KeyboardInterrupt:
         print("\nStopped by user.")
     except Exception as e:
