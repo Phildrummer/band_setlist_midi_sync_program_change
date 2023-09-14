@@ -7,7 +7,8 @@ currentIdx = 0
 def midiNoteListenerCallBack(msg, idx):
     try:
         if msg.channel == config.midiChannel - 1:
-            if msg.type == 'note_on' and msg.velocity == 0:
+            if msg.type == 'note_on' and msg.velocity > 0:
+                print("Song idx: ",idx)
                 if msg.note == config.prevSongMidiNote:
                     # go to previous song in the list
                     if idx == 0: #if the current song is the first one in the list
@@ -20,11 +21,12 @@ def midiNoteListenerCallBack(msg, idx):
                         idx = 0
                     else:
                         idx = idx + 1
+                        print("Song idx (next song): ",idx)
                 elif msg.note == config.resetSongMidiNote:
                     # go to first song in the list
                     idx = 0
 
-                pc = mido.Message(type='program_change',channel=config.midiChannel-1,program=allSongs[idx].programchange)
+                pc = mido.Message(type='program_change',channel=config.midiChannel-1,program=allSongs[idx].programchange-1)
                 outPort.send(pc)
                 print (f"Changing kit to {allSongs[idx].songname}")
             elif msg.type == 'program_change':
@@ -98,7 +100,7 @@ if __name__ == "__main__":
         print(e, "\nexiting script")
         sys.exit()
 
-    pc = mido.Message(type='program_change',channel=config.midiChannel-1,program=allSongs[currentIdx].programchange)
+    pc = mido.Message(type='program_change',channel=config.midiChannel-1,program=allSongs[currentIdx].programchange-1)
     print("Initial Song: ", pc)
     outPort.send(pc)
 
