@@ -59,31 +59,6 @@ def sendMidiClock3(song: Song):
     time.sleep(10)    
     clock.stop()
     print(f"DONE: Stopped sending MIDI clock messages on {outPort.name}...")
-
-def send_clock_pulse(port):
-    #print("F8")
-    port.send(mido.Message('clock'))
-
-def sendMidiClock2(port, song: Song):
-    # Prepare
-    interval: float = 60.0 / ((song.tempo) * 24)  # In seconds
-    if port == None:
-        port = mido.open_output(config.midiOutportName)
-    else:
-        if port.closed == True:
-            port._open()
-
-    timer = RepeatTimer(
-        interval=interval, function=send_clock_pulse, args=[port]
-    )
-
-    # Launch
-    print(f"PROCESSING: Sending MIDI clock messages on {outPort.name} for Song:",f"{song.songname}",f"Tempo: {song.tempo}","...")
-    timer.start()
-    # run clock for some seconds and then close
-    time.sleep(15)
-    timer.cancel()
-    print(f"DONE: Stopped sending MIDI clock messages on {outPort.name}...")
     
 
 def sendMidiClock(song: Song):
@@ -186,7 +161,7 @@ if __name__ == "__main__":
                         outPort.send(pc)
                         print (f"DONE: Changed kit to {allSongs[currentIdx].songname}")
                         #sendMidiClock(allSongs[currentIdx])
-                        sendMidiClock2(outPort, allSongs[currentIdx])
+                        sendMidiClock3(allSongs[currentIdx])
                         print(f"PROCESSING: Raspberry Pi is listening for MIDI messages on {inPort.name}...")
                         if currentIdx == -1:
                             print("There was an error above.")
