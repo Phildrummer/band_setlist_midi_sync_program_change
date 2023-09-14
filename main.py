@@ -7,7 +7,7 @@ currentIdx = 0
 def midiNoteListenerCallBack(msg, idx):
     try:
         if msg.channel == config.midiChannel - 1:
-            if msg.type == 'note_on':
+            if msg.type == 'note_on' and msg.velocity == 0:
                 if msg.note == config.prevSongMidiNote:
                     # go to previous song in the list
                     if idx == 0: #if the current song is the first one in the list
@@ -28,7 +28,7 @@ def midiNoteListenerCallBack(msg, idx):
                 outPort.send(pc)
                 print (f"Changing kit to {allSongs[idx].songname}")
             elif msg.type == 'program_change':
-                sendMidiClock(allSongs[idx])
+                #sendMidiClock(allSongs[idx])
                 print(f"Raspberry Pi is listening for MIDI messages on {inPort.name}...")
     except Exception as e:
         print(f"\n{e}")
@@ -108,6 +108,7 @@ if __name__ == "__main__":
             for msg in inPort:
                 print(msg)
                 if msg.type == 'note_on' or msg.type == 'program_change':
+                    print("Msg Type: ",msg.type)
                     if outPort.closed == True:
                         outPort._open()
                     currentIdx = midiNoteListenerCallBack(msg, currentIdx)
