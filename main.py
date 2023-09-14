@@ -15,11 +15,11 @@ class RepeatTimer(Timer):
 
 
 def send_clock_pulse(port):
-    print("F8")
+    #print("F8")
     port.send(mido.Message('clock'))
 
 def sendMidiClock2(port, song: Song):
-        # Prepare
+    # Prepare
     interval: float = 60.0 / (song.tempo * 24)  # In seconds
     if port == None:
         port = mido.open_output(config.midiOutportName)
@@ -32,6 +32,7 @@ def sendMidiClock2(port, song: Song):
     )
 
     # Launch
+    print(f"PROCESSING: Sending MIDI clock messages on {outPort.name} for Song:",f"{song.songname}",f"Tempo: {song.tempo}","...")
     timer.start()
     # run clock for some seconds and then close
     time.sleep(15)
@@ -136,7 +137,8 @@ if __name__ == "__main__":
                         print (f"PROCESSING: Changing kit to {allSongs[currentIdx].songname}")
                         outPort.send(pc)
                         print (f"DONE: Changed kit to {allSongs[currentIdx].songname}")
-                        sendMidiClock(allSongs[currentIdx])
+                        #sendMidiClock(allSongs[currentIdx])
+                        sendMidiClock2(outPort, allSongs[currentIdx])
                         print(f"PROCESSING: Raspberry Pi is listening for MIDI messages on {inPort.name}...")
                         if currentIdx == -1:
                             print("There was an error above.")
