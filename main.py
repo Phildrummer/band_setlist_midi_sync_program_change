@@ -5,6 +5,8 @@ import json, os, mido, mido.backends.rtmidi, time, sys
 from threading import Timer
 
 currentIdx = 0
+outPort = None
+inPort = None
 
 class RepeatTimer(Timer):
     def run(self):
