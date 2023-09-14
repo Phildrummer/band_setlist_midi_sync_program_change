@@ -105,17 +105,17 @@ if __name__ == "__main__":
     print("Initial Song: ", pc)
     outPort.send(pc)
 
-    try:
-        thruPort = mido.open_output('Midi Through:Midi Through Port-0 14:0')
-    except Exception as e:
-        print(e, "\nNo thru port. Exiting script")
-        sys.exit()
+    # try:
+    #     thruPort = mido.open_output('Midi Through:Midi Through Port-0 14:0')
+    # except Exception as e:
+    #     print(e, "\nNo thru port. Exiting script")
+    #     sys.exit()
 
     try:          
         while inPort != None:
             print(f"Raspberry Pi is listening for MIDI messages on {inPort.name}...")
-            for thruMsg in thruPort:
-                print(thruMsg)
+            # for thruMsg in thruPort:
+            #     print(thruMsg)
             for msg in inPort:
                 print(msg)
                 if outPort.closed == True:
