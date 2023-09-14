@@ -42,6 +42,7 @@ def sendMidiClock(song: Song):
     try:
         # Calculate the time interval (in seconds) between MIDI clock messages based on the tempo
         interval = 60.0 / (song.tempo * 24)  # 24 MIDI clock messages per quarter note
+        print("Interval: ", interval)
         with outPort != None:
             print(f"Sending MIDI clock messages on {outPort.name} for Song:",f"{song.songname}",f"Tempo: {song.tempo}","...")
             # Send MIDI clock messages periodically to simulate the tempo
@@ -55,7 +56,7 @@ def sendMidiClock(song: Song):
                     print(f"Stopped sending MIDI clock messages on {outPort.name}...")
                     break
     except Exception as e:
-        print(f"\n{e.with_traceback}")
+        print(f"\n{e.__traceback__}")
 
 if __name__ == "__main__":
 
