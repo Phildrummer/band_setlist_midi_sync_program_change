@@ -20,7 +20,7 @@ def send_clock_pulse(port):
 
 def sendMidiClock2(port, song: Song):
     # Prepare
-    interval: float = 60.0 / ((song.tempo + 2) * 24)  # In seconds
+    interval: float = 60.0 / ((song.tempo) * 24)  # In seconds
     if port == None:
         port = mido.open_output(config.midiOutportName)
     else:
@@ -34,11 +34,6 @@ def sendMidiClock2(port, song: Song):
     # Launch
     print(f"PROCESSING: Sending MIDI clock messages on {outPort.name} for Song:",f"{song.songname}",f"Tempo: {song.tempo}","...")
     timer.start()
-    while inPort != None:
-            print(f"Reading MIDI clock in {inPort.name}...")
-            for msg in inPort:
-                #if msg.type == 'clock':
-                print(msg)
     # run clock for some seconds and then close
     time.sleep(15)
     timer.cancel()
