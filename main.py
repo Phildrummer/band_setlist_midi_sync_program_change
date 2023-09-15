@@ -11,7 +11,7 @@ inPort = None
 
 def sendMidiClock3(song: Song):
     #print(f"PROCESSING: Sending MIDI clock messages on {outPort.name} for Song:",f"{song.songname}",f"Tempo: {song.tempo}","...")
-    clock = ct(outPort, tempo=song.tempo)
+    clock = ct(outPort, tempo=song.tempo*0.975 + 1.36)
     clock.start()
     time.sleep(10)    
     clock.stop()
@@ -99,7 +99,7 @@ if __name__ == "__main__":
     print("Initial Song: ", pc)
     outPort.send(pc)
     #sendMidiClock(allSongs[currentIdx])
-    sendMidiClock3(allSongs[currentIdx]*0.975 + 1.36)
+    sendMidiClock3(allSongs[currentIdx])
 
     
     try:          
@@ -132,7 +132,7 @@ if __name__ == "__main__":
                         outPort.send(pc)
                         print (f"DONE: Changed kit to {allSongs[currentIdx].songname}")
                         #sendMidiClock(allSongs[currentIdx])
-                        sendMidiClock3(allSongs[currentIdx]*0.975 + 1.36)
+                        sendMidiClock3(allSongs[currentIdx])
                         print(f"PROCESSING: Raspberry Pi is listening for MIDI messages on {inPort.name}...")
                         if currentIdx == -1:
                             print("There was an error above.")
