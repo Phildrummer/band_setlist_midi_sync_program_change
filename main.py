@@ -1,7 +1,7 @@
 from DataObjects import Song
 from DataObjects import GlobalConfig
 import json, os, mido, mido.backends.rtmidi, time, sys
-from clockTimer import ClockTimer as ct
+import clockTimer as ct
 # Docs: https://docs.python.org/3/library/threading.html#timer-objects
 
 
@@ -21,7 +21,7 @@ def sendMidiClock3(song: Song):
 def sendMidiClock(song: Song):
     try:
         # Calculate the time interval (in seconds) between MIDI clock messages based on the tempo
-        interval = 60.0 / (song.tempo * 24)  # 24 MIDI clock messages per quarter note
+        interval = 60.0 / ((song.tempo + song.tempoOffset) * 24)  # 24 MIDI clock messages per quarter note
         with outPort:
             print(f"PROCESSING: Sending MIDI clock messages on {outPort.name} for Song:",f"{song.songname}",f"Tempo: {song.tempo}","...")
             # Send MIDI clock messages periodically to simulate the tempo
@@ -66,41 +66,46 @@ if __name__ == "__main__":
     config = GlobalConfig(globalconfig['midiChannel'],globalconfig['prevSongMidiNote'],globalconfig['nextSongMidiNote'],globalconfig['resetSongMidiNote'])
     #print("\nGlobal Config:")
     #print("MIDI Channel:",config.midiChannel,"Previous Song Note:",config.prevSongMidiNote,"Next Song Note:",config.nextSongMidiNote,"Reset Note:",config.resetSongMidiNote,"\n")
-    print(mido.get_output_names())
+    #print(mido.get_output_names())
     # get the in- and outport names
-    outPutNames = mido.get_output_names()
-    # find the spd-sx port name
-    portName = ""
-    for foundName in outPutNames:
-        print(f"Port Name: {foundName}")
-        if "SPD-SX" in foundName and "MIDI" not in foundName:
-            portName = foundName
-            break
-    # Check if any matching string was found
-    if portName != "":
-        print("Found the SPD-SX ports:", portName)
-        try:
-            inPort = mido.open_input(portName)
-        except Exception as e:
-            print(e, "\nexiting script")
-            sys.exit()       
+    #outPutNames = mido.get_output_names()
+    # find the spd-sx ports
 
-        try:
-            outPort = mido.open_output(portName)
-        except Exception as e:
-            print(e, "\nexiting script")
-            sys.exit()
+    inPort, outPort = ct.getMidiInOutPorts("SPD-SX")
 
-    else:
-        print("\nNo SPD-SX found. Exiting script")
+    if inPort == None or outPort == None:
+        print("No ports found. Exiting script")
         sys.exit()
+    
+    # portName = ""
+    # for foundName in outPutNames:
+    #     print(f"Port Name: {foundName}")
+    #     if "SPD-SX" in foundName and "MIDI" not in foundName:
+    #         portName = foundName
+    #         break
+    # # Check if any matching string was found
+    # if portName != "":
+    #     print("Found the SPD-SX ports:", portName)
+    #     try:
+    #         inPort = mido.open_input(portName)
+    #     except Exception as e:
+    #         print(e, "\nexiting script")
+    #         sys.exit()       
+
+    #     try:
+    #         outPort = mido.open_output(portName)
+    #     except Exception as e:
+    #         print(e, "\nexiting script")
+    #         sys.exit()
+
+    # else:
+    #     print("\nNo SPD-SX found. Exiting script")
+    #     sys.exit()
 
     pc = mido.Message(type='program_change',channel=config.midiChannel-1,program=allSongs[currentIdx].programchange-1)
     print("Initial Song: ", pc)
     outPort.send(pc)
-    #sendMidiClock(allSongs[currentIdx])
-    sendMidiClock3(allSongs[currentIdx])
-
+    ct.sendMidiClock(outPort, allSongs[currentIdx].tempo + allSongs[currentIdx].tempoOffset)
     
     try:          
         while inPort != None:
@@ -131,8 +136,7 @@ if __name__ == "__main__":
                         print (f"PROCESSING: Changing kit to {allSongs[currentIdx].songname}")
                         outPort.send(pc)
                         print (f"DONE: Changed kit to {allSongs[currentIdx].songname}")
-                        #sendMidiClock(allSongs[currentIdx])
-                        sendMidiClock3(allSongs[currentIdx])
+                        ct.sendMidiClock(outPort, allSongs[currentIdx].tempo + allSongs[currentIdx].tempoOffset)
                         print(f"PROCESSING: Raspberry Pi is listening for MIDI messages on {inPort.name}...")
                         if currentIdx == -1:
                             print("There was an error above.")

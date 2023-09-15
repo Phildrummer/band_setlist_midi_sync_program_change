@@ -2,10 +2,11 @@ import json
 
 # Define a custom class
 class Song:
-    def __init__(self, songname, tempo, programchange):
+    def __init__(self, songname, tempo, programchange, tempoOffset):
         self.songname = songname
         self.tempo = tempo
         self.programchange = programchange
+        self.tempoOffset = tempoOffset
 
     def to_dict(self):
         return {
