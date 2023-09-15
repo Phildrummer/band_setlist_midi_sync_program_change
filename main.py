@@ -11,7 +11,7 @@ inPort = None
 
 def sendMidiClock3(song: Song):
     #print(f"PROCESSING: Sending MIDI clock messages on {outPort.name} for Song:",f"{song.songname}",f"Tempo: {song.tempo}","...")
-    clock = ct(outPort, tempo=song.tempo*1.03 - 1.5)
+    clock = ct(outPort, tempo=song.tempo - 1.5)
     clock.start()
     time.sleep(10)    
     clock.stop()
