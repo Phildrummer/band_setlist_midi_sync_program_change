@@ -56,7 +56,7 @@ if __name__ == "__main__":
     with open(json_filename, "r") as json_file:
         data = json.load(json_file)
 
-    allSongs = [Song(song["songname"], song["tempo"], song["programchange"]) for song in data["songs"]]
+    allSongs = [Song(song["songname"], song["tempo"], song["programchange"], song["tempoOffset"]) for song in data["songs"]]
     #print(f"\nTotal Song Count: {len(allSongs)}")
     #print("\nSongs:")
     #for theSong in allSongs:
