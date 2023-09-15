@@ -40,67 +40,24 @@ def sendMidiClock(song: Song):
 if __name__ == "__main__":
 
     # Get the current working directory
-    current_directory = os.getcwd()
-    # print("Current Working Dir:",current_directory,"\n")
-
-    # try:
-    #     print("Output names: ",mido.get_output_names())
-    # except Exception as e:
-    #     print(e)
-    #     sys.exit()
+    current_directory = os.getcwd() 
     
     # Define the filename for the JSON file
     json_filename = os.path.join(current_directory, "setlist.json")
-
+    
     # Read and parse the JSON file
     with open(json_filename, "r") as json_file:
         data = json.load(json_file)
 
     allSongs = [Song(song["songname"], song["tempo"], song["programchange"], song["tempoOffset"]) for song in data["songs"]]
-    #print(f"\nTotal Song Count: {len(allSongs)}")
-    #print("\nSongs:")
-    #for theSong in allSongs:
-        #print("Song Name:",theSong.songname,"Song Tempo:",theSong.tempo,"Program Change:",theSong.programchange)
-    
     globalconfig = data["globalconfig"]
     config = GlobalConfig(globalconfig['midiChannel'],globalconfig['prevSongMidiNote'],globalconfig['nextSongMidiNote'],globalconfig['resetSongMidiNote'])
-    #print("\nGlobal Config:")
-    #print("MIDI Channel:",config.midiChannel,"Previous Song Note:",config.prevSongMidiNote,"Next Song Note:",config.nextSongMidiNote,"Reset Note:",config.resetSongMidiNote,"\n")
-    #print(mido.get_output_names())
-    # get the in- and outport names
-    #outPutNames = mido.get_output_names()
-    # find the spd-sx ports
-
+    # get the spd-sx ports
     inPort, outPort = ct.getMidiInOutPorts("SPD-SX")
 
     if inPort == None or outPort == None:
         print("No ports found. Exiting script")
         sys.exit()
-    
-    # portName = ""
-    # for foundName in outPutNames:
-    #     print(f"Port Name: {foundName}")
-    #     if "SPD-SX" in foundName and "MIDI" not in foundName:
-    #         portName = foundName
-    #         break
-    # # Check if any matching string was found
-    # if portName != "":
-    #     print("Found the SPD-SX ports:", portName)
-    #     try:
-    #         inPort = mido.open_input(portName)
-    #     except Exception as e:
-    #         print(e, "\nexiting script")
-    #         sys.exit()       
-
-    #     try:
-    #         outPort = mido.open_output(portName)
-    #     except Exception as e:
-    #         print(e, "\nexiting script")
-    #         sys.exit()
-
-    # else:
-    #     print("\nNo SPD-SX found. Exiting script")
-    #     sys.exit()
 
     pc = mido.Message(type='program_change',channel=config.midiChannel-1,program=allSongs[currentIdx].programchange-1)
     print("Initial Song: ", pc)
