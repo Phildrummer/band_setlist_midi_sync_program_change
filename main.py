@@ -1,55 +1,13 @@
 from DataObjects import Song
 from DataObjects import GlobalConfig
 import json, os, mido, mido.backends.rtmidi, time, sys
+from clockTimer import ClockTimer
 # Docs: https://docs.python.org/3/library/threading.html#timer-objects
-from threading import Timer
-from mido.ports import BaseOutput
+
 
 currentIdx = 0
 outPort = None
 inPort = None
-
-class RepeatTimer(Timer):
-    def run(self):
-        while not self.finished.wait(self.interval):
-            self.function(*self.args, **self.kwargs)
-
-class ClockTimer:
-    timer = None
-    _tempo: int
-
-    @classmethod
-    def send_clock_pulse(cls, port: BaseOutput):
-        port.send(mido.Message('clock'))
-
-    @property
-    def interval(self):
-        return 60.0 / (self.tempo * 24)  # In seconds
-
-    @property
-    def tempo(self):
-        return self._tempo
-
-    @tempo.setter
-    def tempo(self, value):
-        self._tempo = value
-        if self.timer:
-            self.timer.interval = self.interval
-
-    def __init__(self, out_port, tempo):
-        self.tempo = tempo
-        self.out_port = out_port
-        self.timer = RepeatTimer(
-            interval=self.interval,
-            function=self.send_clock_pulse,
-            args=[self.out_port]
-        )
-
-    def start(self):
-        self.timer.start()
-
-    def stop(self):
-        self.timer.cancel()
 
 def sendMidiClock3(song: Song):
     #print(f"PROCESSING: Sending MIDI clock messages on {outPort.name} for Song:",f"{song.songname}",f"Tempo: {song.tempo}","...")
@@ -83,13 +41,13 @@ if __name__ == "__main__":
 
     # Get the current working directory
     current_directory = os.getcwd()
-    print("Current Working Dir:",current_directory,"\n")
+    # print("Current Working Dir:",current_directory,"\n")
 
-    try:
-        print("Output names: ",mido.get_output_names())
-    except Exception as e:
-        print(e)
-        sys.exit()
+    # try:
+    #     print("Output names: ",mido.get_output_names())
+    # except Exception as e:
+    #     print(e)
+    #     sys.exit()
     
     # Define the filename for the JSON file
     json_filename = os.path.join(current_directory, "setlist.json")
@@ -134,7 +92,7 @@ if __name__ == "__main__":
             sys.exit()
 
     else:
-        print(e, "\nNo SPD-SX found. Exiting script")
+        print("\nNo SPD-SX found. Exiting script")
         sys.exit()
 
     pc = mido.Message(type='program_change',channel=config.midiChannel-1,program=allSongs[currentIdx].programchange-1)
