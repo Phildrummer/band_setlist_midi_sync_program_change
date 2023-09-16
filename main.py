@@ -53,16 +53,23 @@ if __name__ == "__main__":
     globalconfig = data["globalconfig"]
     config = GlobalConfig(globalconfig['midiChannel'],globalconfig['prevSongMidiNote'],globalconfig['nextSongMidiNote'],globalconfig['resetSongMidiNote'])
     # get the spd-sx ports
-    inPort, outPort = ct.getMidiInOutPorts("SPD-SX")
+    try:
+        inPort, outPort = ct.getMidiInOutPorts("SPD-SX")
 
-    if inPort == None or outPort == None:
-        print("No ports found. Exiting script")
+        if inPort == None or outPort == None:
+            print("No ports found. Exiting script")
+            sys.exit()
+    except Exception as e:
+        print(f"{e}","\nNo ports found. Exiting script")
         sys.exit()
 
     pc = mido.Message(type='program_change',channel=config.midiChannel-1,program=allSongs[currentIdx].programchange-1)
     print("Initial Song: ", pc)
     outPort.send(pc)
-    ct.sendMidiClock(outPort, allSongs[currentIdx].tempo + allSongs[currentIdx].tempoOffset)
+    clock = None
+    clock = ct.ClockTimer(outPort, tempo=allSongs[currentIdx].tempo + allSongs[currentIdx].tempoOffset)
+    clock.start()
+    #ct.sendMidiClock(outPort, allSongs[currentIdx].tempo + allSongs[currentIdx].tempoOffset)
     
     try:          
         while inPort != None:
@@ -73,31 +80,36 @@ if __name__ == "__main__":
                     outPort._open()
                 if msg.channel == config.midiChannel - 1:
                     if msg.type == 'note_on' and msg.velocity == 0:
-                        if msg.note == config.prevSongMidiNote:
-                        # go to previous song in the list
-                            if currentIdx == 0: #if the current song is the first one in the list
-                                currentIdx = len(allSongs)-1
-                            else:
-                                currentIdx = currentIdx - 1
-                        elif msg.note == config.nextSongMidiNote:
-                            # go to next song in the list
-                            if currentIdx == len(allSongs)-1: # if the current song is the last one in the list
+                        if msg.note == config.prevSongMidiNote or msg.note == config.nextSongMidiNote or msg.note == config.resetSongMidiNote:
+                            if msg.note == config.prevSongMidiNote:
+                            # go to previous song in the list
+                                if currentIdx == 0: #if the current song is the first one in the list
+                                    currentIdx = len(allSongs)-1
+                                else:
+                                    currentIdx = currentIdx - 1
+                            elif msg.note == config.nextSongMidiNote:
+                                # go to next song in the list
+                                if currentIdx == len(allSongs)-1: # if the current song is the last one in the list
+                                    currentIdx = 0
+                                else:
+                                    currentIdx = currentIdx + 1
+                            elif msg.note == config.resetSongMidiNote:
+                                # go to first song in the list
                                 currentIdx = 0
-                            else:
-                                currentIdx = currentIdx + 1
-                        elif msg.note == config.resetSongMidiNote:
-                            # go to first song in the list
-                            currentIdx = 0
 
-                        pc = mido.Message(type='program_change',channel=config.midiChannel-1,program=allSongs[currentIdx].programchange-1)
-                        print (f"PROCESSING: Changing kit to {allSongs[currentIdx].songname}")
-                        outPort.send(pc)
-                        print (f"DONE: Changed kit to {allSongs[currentIdx].songname}")
-                        ct.sendMidiClock(outPort, allSongs[currentIdx].tempo + allSongs[currentIdx].tempoOffset)
-                        print(f"PROCESSING: Raspberry Pi is listening for MIDI messages on {inPort.name}...")
-                        if currentIdx == -1:
-                            print("There was an error above.")
-                            break
+                            pc = mido.Message(type='program_change',channel=config.midiChannel-1,program=allSongs[currentIdx].programchange-1)
+                            print (f"PROCESSING: Changing kit to {allSongs[currentIdx].songname}")
+                            outPort.send(pc)
+                            print (f"DONE: Changed kit to {allSongs[currentIdx].songname}")
+                            if clock != None:
+                                clock.stop()
+                            clock = ct.ClockTimer(outPort, tempo=allSongs[currentIdx].tempo + allSongs[currentIdx].tempoOffset)
+                            clock.start()
+                            #ct.sendMidiClock(outPort, allSongs[currentIdx].tempo + allSongs[currentIdx].tempoOffset)
+                            print(f"PROCESSING: Raspberry Pi is listening for MIDI messages on {inPort.name}...")
+                            if currentIdx == -1:
+                                print("There was an error above.")
+                                break
     except KeyboardInterrupt:
         print("\nStopped by user.")
     except Exception as e:
