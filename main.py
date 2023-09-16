@@ -93,6 +93,7 @@ if __name__ == "__main__":
                                 else:
                                     currentIdx = currentIdx + 1
                             elif msg.note == config.resetSongMidiNote:
+                                print("PROCESSING: Reseting setlist")
                                 # go to first song in the list
                                 currentIdx = 0
 
