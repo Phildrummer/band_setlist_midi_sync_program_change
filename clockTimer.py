@@ -2,8 +2,6 @@ from threading import Timer
 from mido.ports import BaseOutput
 from mido import Message
 import mido
-from DataObjects import Song
-import time
 
 def getMidiInOutPorts(nameToSearch):
     outPutNames = mido.get_output_names()
@@ -14,15 +12,6 @@ def getMidiInOutPorts(nameToSearch):
             inPort = mido.open_input(foundName)
             outPort = mido.open_output(foundName)
             return inPort, outPort
-
-
-def sendMidiClock(outPort: BaseOutput, tempoBpm: float):
-    #print(f"PROCESSING: Sending MIDI clock messages on {outPort.name} for Song:",f"{song.songname}",f"Tempo: {song.tempo}","...")
-    clock = ClockTimer(outPort, tempo=tempoBpm)
-    clock.start()
-    time.sleep(10)    
-    clock.stop()
-    #print(f"DONE: Stopped sending MIDI clock messages on {outPort.name}...")
 
 class RepeatTimer(Timer):
     def run(self):

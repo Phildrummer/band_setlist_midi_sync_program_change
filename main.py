@@ -69,7 +69,6 @@ if __name__ == "__main__":
     clock = None
     clock = ct.ClockTimer(outPort, tempo=allSongs[currentIdx].tempo + allSongs[currentIdx].tempoOffset)
     clock.start()
-    #ct.sendMidiClock(outPort, allSongs[currentIdx].tempo + allSongs[currentIdx].tempoOffset)
     
     try:          
         while inPort != None:
@@ -98,14 +97,13 @@ if __name__ == "__main__":
                                 currentIdx = 0
 
                             pc = mido.Message(type='program_change',channel=config.midiChannel-1,program=allSongs[currentIdx].programchange-1)
-                            print (f"PROCESSING: Changing kit to {allSongs[currentIdx].songname}")
+                            #print (f"PROCESSING: Changing kit to {allSongs[currentIdx].songname}")
                             outPort.send(pc)
-                            print (f"DONE: Changed kit to {allSongs[currentIdx].songname}")
+                            print (f"DONE: Changed kit to {allSongs[currentIdx].songname} --> tempo {allSongs[currentIdx].tempo} BPM")
                             if clock != None:
                                 clock.stop()
                             clock = ct.ClockTimer(outPort, tempo=allSongs[currentIdx].tempo + allSongs[currentIdx].tempoOffset)
                             clock.start()
-                            #ct.sendMidiClock(outPort, allSongs[currentIdx].tempo + allSongs[currentIdx].tempoOffset)
                             print(f"PROCESSING: Raspberry Pi is listening for MIDI messages on {inPort.name}...")
                             if currentIdx == -1:
                                 print("There was an error above.")
