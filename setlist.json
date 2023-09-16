@@ -225,8 +225,8 @@
     ],
     "globalconfig": {
         "midiChannel": 3,
-        "prevSongMidiNote": 76,
-        "nextSongMidiNote": 78,
-        "resetSongMidiNote": 74
+        "prevSongMidiNote": 70,
+        "nextSongMidiNote": 71,
+        "resetSongMidiNote": 72
     }
 }
