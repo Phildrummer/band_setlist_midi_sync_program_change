@@ -46,7 +46,8 @@ if __name__ == "__main__":
     #           auto_linebreaks=True,
     #           backlight_enabled=True)
     lcd.clear()
-    lcd.write_string('Welcome to\nMIDI controller PCC')
+    lcd.write_string('Welcome to\n\rMIDI controller PCC')
+    time.sleep(5)
     # Get the current working directory
     current_directory = os.getcwd() 
     
@@ -67,12 +68,12 @@ if __name__ == "__main__":
         if inPort == None or outPort == None:
             print("No ports found. Exiting script")
             lcd.clear()
-            lcd.write_string("No ports found\nExiting program")
+            lcd.write_string("No ports found\n\rExiting program")
             sys.exit()
     except Exception as e:
         print(f"{e}","\nNo ports found. Exiting script")
         lcd.clear()
-        lcd.write_string("No ports found\nExiting program")
+        lcd.write_string("No ports found\n\rExiting program")
         sys.exit()
 
     pc = mido.Message(type='program_change',channel=config.midiChannel-1,program=allSongs[currentIdx].programchange-1)
