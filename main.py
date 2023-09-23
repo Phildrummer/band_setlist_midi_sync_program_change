@@ -3,45 +3,7 @@ from DataObjects import GlobalConfig
 import json, os, mido, mido.backends.rtmidi, time, sys
 import clockTimer as ct
 # Docs: https://docs.python.org/3/library/threading.html#timer-objects
-import smbus
-import time
-
-# Define I2C bus and LCD address
-bus = smbus.SMBus(1)  # 1 indicates /dev/i2c-1
-
-# Define LCD address
-lcd_addr = 0x3F  # Use 'i2cdetect -y 1' to find the correct address
-
-# LCD constants
-LCD_WIDTH = 20
-LCD_LINE_1 = 0x80  # LCD RAM address for the 1st line
-LCD_LINE_2 = 0xC0  # LCD RAM address for the 2nd line
-LCD_LINE_3 = 0x94  # LCD RAM address for the 3rd line
-LCD_LINE_4 = 0xD4  # LCD RAM address for the 4th line
-
-def lcd_init():
-    # Initialize the LCD
-    bus.write_byte(lcd_addr, 0x38)  # 2-line display, 5x8 character font
-    bus.write_byte(lcd_addr, 0x0C)  # Display on, cursor off, blink off
-    bus.write_byte(lcd_addr, 0x01)  # Clear display
-
-def lcd_text(message, line):
-    # Send text to the LCD
-    if line == 1:
-        address = LCD_LINE_1
-    elif line == 2:
-        address = LCD_LINE_2
-    elif line == 3:
-        address = LCD_LINE_3
-    elif line == 4:
-        address = LCD_LINE_4
-    else:
-        return
-
-    message = message.ljust(LCD_WIDTH)
-    bus.write_byte(lcd_addr, address)
-    for char in message:
-        bus.write_byte_data(lcd_addr, 0x40, ord(char))
+from RPLCD.i2c import CharLCD
 
 currentIdx = 0
 outPort = None
@@ -77,11 +39,12 @@ def sendMidiClock(song: Song):
 
 if __name__ == "__main__":
 
-    lcd_init()
-    lcd_text("Hello, World!", 1)
-    lcd_text("Hello, World!", 2)
-    lcd_text("Hello, World!", 3)
-    lcd_text("Hello, World!", 4)
+    lcd = CharLCD(i2c_expander='PCF8574', address=0x27, port=1,
+              cols=20, rows=4, dotsize=8,
+              charmap='A02',
+              auto_linebreaks=True,
+              backlight_enabled=True)
+    lcd.write_string('Hello world')
     # Get the current working directory
     current_directory = os.getcwd() 
     
@@ -101,6 +64,8 @@ if __name__ == "__main__":
 
         if inPort == None or outPort == None:
             print("No ports found. Exiting script")
+            lcd.clear()
+            lcd.write_string("No ports found\nExiting program")
             sys.exit()
     except Exception as e:
         print(f"{e}","\nNo ports found. Exiting script")
