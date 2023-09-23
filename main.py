@@ -38,10 +38,14 @@ def sendMidiClock(song: Song):
     except Exception as e:
         print(f"\n{e}")
 
-def exitingProgram(text: str):
+def exitingProgram(text: str, e: Exception):
+    if e != None:
+        print("Error: ",e)
     print(text)
     lcd.clear()
     lcd.write_string(text)
+    time.sleep(3)
+    lcd.clear()
     sys.exit()
 
 if __name__ == "__main__":
@@ -73,9 +77,9 @@ if __name__ == "__main__":
         inPort, outPort = ct.getMidiInOutPorts("SPD-SX")
 
         if inPort == None or outPort == None:
-            exitingProgram("No ports found.\n\rExiting script")
+            exitingProgram("No ports found.\n\rExiting script", None)
     except Exception as e:
-        exitingProgram(f"{e}\n\rNo ports found.\n\rExiting script")
+        exitingProgram("No ports found.\n\rExiting script", e)
 
     pc = mido.Message(type='program_change',channel=config.midiChannel-1,program=allSongs[currentIdx].programchange-1)
     print("Initial Song: ", f"{allSongs[currentIdx].songname} --> tempo {allSongs[currentIdx].tempo} BPM")
