@@ -8,6 +8,7 @@ from RPLCD.i2c import CharLCD
 currentIdx = 0
 outPort = None
 inPort = None
+lcd = None
 
 def sendMidiClock3(song: Song):
     #print(f"PROCESSING: Sending MIDI clock messages on {outPort.name} for Song:",f"{song.songname}",f"Tempo: {song.tempo}","...")
@@ -36,6 +37,12 @@ def sendMidiClock(song: Song):
                     break
     except Exception as e:
         print(f"\n{e}")
+
+def exitingProgram(text: str):
+    print(text)
+    lcd.clear()
+    lcd.write_string(text)
+    sys.exit()
 
 if __name__ == "__main__":
 
@@ -66,15 +73,9 @@ if __name__ == "__main__":
         inPort, outPort = ct.getMidiInOutPorts("SPD-SX")
 
         if inPort == None or outPort == None:
-            print("No ports found. Exiting script")
-            lcd.clear()
-            lcd.write_string("No ports found\n\rExiting program")
-            sys.exit()
+            exitingProgram("No ports found.\n\rExiting script")
     except Exception as e:
-        print(f"{e}","\nNo ports found. Exiting script")
-        lcd.clear()
-        lcd.write_string("No ports found\n\rExiting program")
-        sys.exit()
+        exitingProgram(f"{e}\n\rNo ports found.\n\rExiting script")
 
     pc = mido.Message(type='program_change',channel=config.midiChannel-1,program=allSongs[currentIdx].programchange-1)
     print("Initial Song: ", f"{allSongs[currentIdx].songname} --> tempo {allSongs[currentIdx].tempo} BPM")
