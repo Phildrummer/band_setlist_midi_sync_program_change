@@ -84,6 +84,10 @@ if __name__ == "__main__":
                            config.resetSongMidiNote,
                            config.shutdownPiMidiNote,
                            config.startStopSongMidiNote]
+
+    for item in allMidiControlNotes:
+        print(item)
+    
     # get the spd-sx ports
     try:
         inPort, outPort = ct.getMidiInOutPorts("SPD-SX")
@@ -97,7 +101,7 @@ if __name__ == "__main__":
     print("Initial Song: ", f"{allSongs[currentIdx].songname} --> tempo {allSongs[currentIdx].tempo} BPM")
     lcd.clear()
     lcd.write_string(f"Song: {allSongs[currentIdx].songname}\n\rTempo: {allSongs[currentIdx].tempo}")
-    time.sleep(5)
+    time.sleep(2)
     outPort.send(pc)
     clock = None
     # clock = ct.ClockTimer(outPort, tempo=allSongs[currentIdx].tempo + allSongs[currentIdx].tempoOffset)
