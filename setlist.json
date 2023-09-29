@@ -228,7 +228,7 @@
         "prevSongMidiNote": 70,
         "nextSongMidiNote": 72,
         "resetSongMidiNote": 73,
-        "startSongMidiNote": 71,
+        "startStopSongMidiNote": 71,
         "shutdownPiMidiNote": 74
     }
 }

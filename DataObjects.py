@@ -38,7 +38,7 @@ class GlobalConfig:
             "nextSongMidiNote": self.nextSongMidiNote,
             "resetSongMidiNote": self.resetSongMidiNote,
             "shutdownPiMidiNote": self.shutdownPiMidiNote,
-            "startSongMidiNote": self.startStopSongMidiNote
+            "startStopSongMidiNote": self.startStopSongMidiNote
         }
 
     # Define a class method to create an instance from a JSON dictionary
