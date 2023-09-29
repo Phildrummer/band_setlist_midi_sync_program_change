@@ -128,6 +128,7 @@ if __name__ == "__main__":
                                 else:
                                     clock.stop()
                                     clock = None
+                                    lcd.clear()
                                     lcd.write_string(f'Song: {allSongs[currentIdx].songname}\n\rTempo: {allSongs[currentIdx].tempo} BPM\n\rStoppped tempo...')
                             elif msg.note == config.shutdownPiMidiNote:
                                 print('PROCESSING: Shutting down')
