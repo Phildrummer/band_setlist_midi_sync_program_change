@@ -156,7 +156,7 @@ if __name__ == "__main__":
                                 outPort.send(pc)
                                 print (f"DONE: Changed kit to {allSongs[currentIdx].songname} --> tempo {allSongs[currentIdx].tempo} BPM")
                                 lcd.clear()
-                                lcd.write(f"Song: {allSongs[currentIdx].songname}\n\rTempo: {allSongs[currentIdx].tempo} BPM")
+                                lcd.write(f'Song: {allSongs[currentIdx].songname}\n\rTempo: {allSongs[currentIdx].tempo} BPM')
 
                             
                             if currentIdx == -1:
