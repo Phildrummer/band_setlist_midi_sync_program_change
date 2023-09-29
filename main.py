@@ -123,6 +123,8 @@ if __name__ == "__main__":
                                     clock = ct.ClockTimer(outPort, tempo=allSongs[currentIdx].tempo + allSongs[currentIdx].tempoOffset)
                                     clock.start()
                                     print(f"PROCESSING: Raspberry Pi is listening for MIDI messages on {inPort.name}...")
+                                    lcd.clear()
+                                    lcd.write_string(f'Song: {allSongs[currentIdx].songname}\n\rTempo: {allSongs[currentIdx].tempo} BPM\n\rSending tempo to SPD-SX...')
                                 else:
                                     clock.stop()
                                     clock = None
@@ -133,7 +135,13 @@ if __name__ == "__main__":
                                 time.sleep(3)
                                 lcd.clear()
                                 subprocess.call(['sudo', 'shutdown','-h','now'])
-                            else:                            
+                            else:
+                                # try to stop the midi clock before changing the song
+                                if clock != None:
+                                    # stop the midi clock first
+                                    clock.stop()
+                                    # set it to none
+                                    clock = None;                            
                                 if msg.note == config.prevSongMidiNote:
                                 # go to previous song in the list
                                     if currentIdx == 0: #if the current song is the first one in the list
