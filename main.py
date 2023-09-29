@@ -60,7 +60,7 @@ if __name__ == "__main__":
     lcd.clear()
     time.sleep(2)
     lcd.write_string('Welcome to\n\rMIDI controller PCC')
-    time.sleep(5)
+    time.sleep(2)
     # Get the current working directory
     current_directory = os.getcwd() 
     
@@ -122,6 +122,13 @@ if __name__ == "__main__":
                                 else:
                                     clock.stop()
                                     clock = None
+                            elif msg.note == config.shutdownPiMidiNote:
+                                print('PROCESSING: Shutting down')
+                                lcd.clear()
+                                lcd.write('Shutting down the Pi...')
+                                time.sleep(3)
+                                lcd.clear()
+                                subprocess.call(['sudo', 'shutdown','-h','now'])
                             else:                            
                                 if msg.note == config.prevSongMidiNote:
                                 # go to previous song in the list
@@ -139,13 +146,6 @@ if __name__ == "__main__":
                                     print("PROCESSING: Reseting setlist")
                                     # go to first song in the list
                                     currentIdx = 0
-                                elif msg.note == config.shutdownPiMidiNote:
-                                    print('PROCESSING: Shutting down')
-                                    lcd.clear()
-                                    lcd.write('Shutting down the Pi...')
-                                    time.sleep(3)
-                                    lcd.clear()
-                                    subprocess.call(['sudo', 'shutdown','-h','now'])
                                 
                                 pc = mido.Message(type='program_change',channel=config.midiChannel-1,program=allSongs[currentIdx].programchange-1)
                                 #print (f"PROCESSING: Changing kit to {allSongs[currentIdx].songname}")
