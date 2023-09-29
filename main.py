@@ -166,4 +166,5 @@ if __name__ == "__main__":
         print("\nStopped by user.")
     except Exception as e:
         print(f"\n{e}")
+        print("\n",e.__traceback__.tb_lineno)
         
