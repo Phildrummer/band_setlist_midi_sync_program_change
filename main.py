@@ -4,6 +4,7 @@ import json, os, mido, mido.backends.rtmidi, time, sys
 import clockTimer as ct
 # Docs: https://docs.python.org/3/library/threading.html#timer-objects
 from RPLCD.i2c import CharLCD
+import subprocess
 
 currentIdx = 0
 outPort = None
@@ -72,6 +73,11 @@ if __name__ == "__main__":
     allSongs = [Song(song["songname"], song["tempo"], song["programchange"], song["tempoOffset"]) for song in data["songs"]]
     globalconfig = data["globalconfig"]
     config = GlobalConfig(globalconfig['midiChannel'],globalconfig['prevSongMidiNote'],globalconfig['nextSongMidiNote'],globalconfig['resetSongMidiNote'])
+    allMidiControlNotes = [config.nextSongMidiNote,
+                           config.prevSongMidiNote,
+                           config.resetSongMidiNote,
+                           config.shutdownPiMidiNote,
+                           config.startStopSongMidiNote]
     # get the spd-sx ports
     try:
         inPort, outPort = ct.getMidiInOutPorts("SPD-SX")
@@ -83,10 +89,13 @@ if __name__ == "__main__":
 
     pc = mido.Message(type='program_change',channel=config.midiChannel-1,program=allSongs[currentIdx].programchange-1)
     print("Initial Song: ", f"{allSongs[currentIdx].songname} --> tempo {allSongs[currentIdx].tempo} BPM")
+    lcd.clear()
+    lcd.write_string(f"Song: {allSongs[currentIdx].songname}\n\rTempo: {allSongs[currentIdx].tempo}")
+    time.sleep(5)
     outPort.send(pc)
     clock = None
-    clock = ct.ClockTimer(outPort, tempo=allSongs[currentIdx].tempo + allSongs[currentIdx].tempoOffset)
-    clock.start()
+    # clock = ct.ClockTimer(outPort, tempo=allSongs[currentIdx].tempo + allSongs[currentIdx].tempoOffset)
+    # clock.start()
     
     try:          
         while inPort != None:
@@ -97,7 +106,7 @@ if __name__ == "__main__":
                     outPort._open()
                 if msg.channel == config.midiChannel - 1:
                     if msg.type == 'note_on' and msg.velocity == 0:
-                        if msg.note == config.prevSongMidiNote or msg.note == config.nextSongMidiNote or msg.note == config.resetSongMidiNote:
+                        if msg.note in allMidiControlNotes: # == config.prevSongMidiNote or msg.note == config.nextSongMidiNote or msg.note == config.resetSongMidiNote or msg.note == config.shutdownPiMidiNote or msg.note == config.startStopSongMidiNote:
                             if msg.note == config.prevSongMidiNote:
                             # go to previous song in the list
                                 if currentIdx == 0: #if the current song is the first one in the list
@@ -114,16 +123,30 @@ if __name__ == "__main__":
                                 print("PROCESSING: Reseting setlist")
                                 # go to first song in the list
                                 currentIdx = 0
-
+                            elif msg.note == config.shutdownPiMidiNote:
+                                print('PROCESSING: Shutting down')
+                                lcd.clear()
+                                lcd.write('Shutting down the Pi...')
+                                time.sleep(3)
+                                lcd.clear()
+                                subprocess.call(['sudo', 'shutdown','-h','now'])
+                            
                             pc = mido.Message(type='program_change',channel=config.midiChannel-1,program=allSongs[currentIdx].programchange-1)
                             #print (f"PROCESSING: Changing kit to {allSongs[currentIdx].songname}")
                             outPort.send(pc)
                             print (f"DONE: Changed kit to {allSongs[currentIdx].songname} --> tempo {allSongs[currentIdx].tempo} BPM")
-                            if clock != None:
-                                clock.stop()
-                            clock = ct.ClockTimer(outPort, tempo=allSongs[currentIdx].tempo + allSongs[currentIdx].tempoOffset)
-                            clock.start()
-                            print(f"PROCESSING: Raspberry Pi is listening for MIDI messages on {inPort.name}...")
+                            lcd.clear()
+                            lcd.write(f"Song: {allSongs[currentIdx].songname}\n\rTempo: {allSongs[currentIdx].tempo} BPM")
+
+                            # start/stop the song(MIDI clock)
+                            if msg.note == config.startStopSongMidiNote:                                                            
+                                if clock == None:                                    
+                                    clock = ct.ClockTimer(outPort, tempo=allSongs[currentIdx].tempo + allSongs[currentIdx].tempoOffset)
+                                    clock.start()
+                                    print(f"PROCESSING: Raspberry Pi is listening for MIDI messages on {inPort.name}...")
+                                else:
+                                    clock.stop()
+                                    clock = None
                             if currentIdx == -1:
                                 print("There was an error above.")
                                 break

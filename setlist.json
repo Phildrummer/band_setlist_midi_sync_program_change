@@ -227,6 +227,8 @@
         "midiChannel": 3,
         "prevSongMidiNote": 70,
         "nextSongMidiNote": 72,
-        "resetSongMidiNote": 71
+        "resetSongMidiNote": 73,
+        "startSongMidiNote": 71,
+        "shutdownPiMidiNote": 74
     }
 }
