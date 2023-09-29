@@ -72,7 +72,12 @@ if __name__ == "__main__":
 
     allSongs = [Song(song["songname"], song["tempo"], song["programchange"], song["tempoOffset"]) for song in data["songs"]]
     globalconfig = data["globalconfig"]
-    config = GlobalConfig(globalconfig['midiChannel'],globalconfig['prevSongMidiNote'],globalconfig['nextSongMidiNote'],globalconfig['resetSongMidiNote'])
+    config = GlobalConfig(globalconfig['midiChannel'],
+                          globalconfig['prevSongMidiNote'],
+                          globalconfig['nextSongMidiNote'],
+                          globalconfig['resetSongMidiNote'],
+                          globalconfig['startStopSongMidiNote'],
+                          globalconfig['shutdownPiMidiNote'])
     allMidiControlNotes = [config.nextSongMidiNote,
                            config.prevSongMidiNote,
                            config.resetSongMidiNote,
