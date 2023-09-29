@@ -58,6 +58,7 @@ if __name__ == "__main__":
     #           auto_linebreaks=True,
     #           backlight_enabled=True)
     lcd.clear()
+    time.sleep(2)
     lcd.write_string('Welcome to\n\rMIDI controller PCC')
     time.sleep(5)
     # Get the current working directory
@@ -112,37 +113,6 @@ if __name__ == "__main__":
                 if msg.channel == config.midiChannel - 1:
                     if msg.type == 'note_on' and msg.velocity == 0:
                         if msg.note in allMidiControlNotes: # == config.prevSongMidiNote or msg.note == config.nextSongMidiNote or msg.note == config.resetSongMidiNote or msg.note == config.shutdownPiMidiNote or msg.note == config.startStopSongMidiNote:
-                            if msg.note == config.prevSongMidiNote:
-                            # go to previous song in the list
-                                if currentIdx == 0: #if the current song is the first one in the list
-                                    currentIdx = len(allSongs)-1
-                                else:
-                                    currentIdx = currentIdx - 1
-                            elif msg.note == config.nextSongMidiNote:
-                                # go to next song in the list
-                                if currentIdx == len(allSongs)-1: # if the current song is the last one in the list
-                                    currentIdx = 0
-                                else:
-                                    currentIdx = currentIdx + 1
-                            elif msg.note == config.resetSongMidiNote:
-                                print("PROCESSING: Reseting setlist")
-                                # go to first song in the list
-                                currentIdx = 0
-                            elif msg.note == config.shutdownPiMidiNote:
-                                print('PROCESSING: Shutting down')
-                                lcd.clear()
-                                lcd.write('Shutting down the Pi...')
-                                time.sleep(3)
-                                lcd.clear()
-                                subprocess.call(['sudo', 'shutdown','-h','now'])
-                            
-                            pc = mido.Message(type='program_change',channel=config.midiChannel-1,program=allSongs[currentIdx].programchange-1)
-                            #print (f"PROCESSING: Changing kit to {allSongs[currentIdx].songname}")
-                            outPort.send(pc)
-                            print (f"DONE: Changed kit to {allSongs[currentIdx].songname} --> tempo {allSongs[currentIdx].tempo} BPM")
-                            lcd.clear()
-                            lcd.write(f"Song: {allSongs[currentIdx].songname}\n\rTempo: {allSongs[currentIdx].tempo} BPM")
-
                             # start/stop the song(MIDI clock)
                             if msg.note == config.startStopSongMidiNote:                                                            
                                 if clock == None:                                    
@@ -152,6 +122,39 @@ if __name__ == "__main__":
                                 else:
                                     clock.stop()
                                     clock = None
+                            else:                            
+                                if msg.note == config.prevSongMidiNote:
+                                # go to previous song in the list
+                                    if currentIdx == 0: #if the current song is the first one in the list
+                                        currentIdx = len(allSongs)-1
+                                    else:
+                                        currentIdx = currentIdx - 1
+                                elif msg.note == config.nextSongMidiNote:
+                                    # go to next song in the list
+                                    if currentIdx == len(allSongs)-1: # if the current song is the last one in the list
+                                        currentIdx = 0
+                                    else:
+                                        currentIdx = currentIdx + 1
+                                elif msg.note == config.resetSongMidiNote:
+                                    print("PROCESSING: Reseting setlist")
+                                    # go to first song in the list
+                                    currentIdx = 0
+                                elif msg.note == config.shutdownPiMidiNote:
+                                    print('PROCESSING: Shutting down')
+                                    lcd.clear()
+                                    lcd.write('Shutting down the Pi...')
+                                    time.sleep(3)
+                                    lcd.clear()
+                                    subprocess.call(['sudo', 'shutdown','-h','now'])
+                                
+                                pc = mido.Message(type='program_change',channel=config.midiChannel-1,program=allSongs[currentIdx].programchange-1)
+                                #print (f"PROCESSING: Changing kit to {allSongs[currentIdx].songname}")
+                                outPort.send(pc)
+                                print (f"DONE: Changed kit to {allSongs[currentIdx].songname} --> tempo {allSongs[currentIdx].tempo} BPM")
+                                lcd.clear()
+                                lcd.write(f"Song: {allSongs[currentIdx].songname}\n\rTempo: {allSongs[currentIdx].tempo} BPM")
+
+                            
                             if currentIdx == -1:
                                 print("There was an error above.")
                                 break
