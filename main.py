@@ -124,10 +124,11 @@ if __name__ == "__main__":
                                     clock.start()
                                     print(f"PROCESSING: Raspberry Pi is listening for MIDI messages on {inPort.name}...")
                                     lcd.clear()
-                                    lcd.write_string(f'Song: {allSongs[currentIdx].songname}\n\rTempo: {allSongs[currentIdx].tempo} BPM\n\rSending tempo to SPD-SX...')
+                                    lcd.write_string(f'Song: {allSongs[currentIdx].songname}\n\rTempo: {allSongs[currentIdx].tempo} BPM\n\rSending tempo...')
                                 else:
                                     clock.stop()
                                     clock = None
+                                    lcd.write_string(f'Song: {allSongs[currentIdx].songname}\n\rTempo: {allSongs[currentIdx].tempo} BPM\n\rStoppped tempo...')
                             elif msg.note == config.shutdownPiMidiNote:
                                 print('PROCESSING: Shutting down')
                                 lcd.clear()
