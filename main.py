@@ -79,11 +79,11 @@ if __name__ == "__main__":
                           globalconfig['resetSongMidiNote'],
                           globalconfig['startStopSongMidiNote'],
                           globalconfig['shutdownPiMidiNote'])
-    allMidiControlNotes = [config.nextSongMidiNote,
-                           config.prevSongMidiNote,
+    allMidiControlNotes = [config.prevSongMidiNote,
+                           config.nextSongMidiNote,
                            config.resetSongMidiNote,
-                           config.shutdownPiMidiNote,
-                           config.startStopSongMidiNote]
+                           config.startStopSongMidiNote,
+                           config.shutdownPiMidiNote]
 
     for item in allMidiControlNotes:
         print(item)
@@ -116,7 +116,7 @@ if __name__ == "__main__":
                     outPort._open()
                 if msg.channel == config.midiChannel - 1:
                     if msg.type == 'note_on' and msg.velocity == 0:
-                        if msg.note in allMidiControlNotes: # == config.prevSongMidiNote or msg.note == config.nextSongMidiNote or msg.note == config.resetSongMidiNote or msg.note == config.shutdownPiMidiNote or msg.note == config.startStopSongMidiNote:
+                        if msg.note in allMidiControlNotes:
                             # start/stop the song(MIDI clock)
                             if msg.note == config.startStopSongMidiNote:                                                            
                                 if clock == None:                                    

@@ -22,13 +22,13 @@ class Song:
 
 # Define a custom class
 class GlobalConfig:
-    def __init__(self, midiChannel, prevSongMidiNote, nextSongMidiNote, resetSongMidiNote, shutdownPiMidiNote, startStopSongMidiNote):
+    def __init__(self, midiChannel, prevSongMidiNote, nextSongMidiNote, resetSongMidiNote, startStopSongMidiNote, shutdownPiMidiNote):
         self.midiChannel = midiChannel
         self.prevSongMidiNote = prevSongMidiNote
         self.nextSongMidiNote = nextSongMidiNote
         self.resetSongMidiNote = resetSongMidiNote
-        self.shutdownPiMidiNote = shutdownPiMidiNote
         self.startStopSongMidiNote = startStopSongMidiNote
+        self.shutdownPiMidiNote = shutdownPiMidiNote
 
     # Define a method to convert the instance to a JSON-serializable dictionary
     def to_json(self):
@@ -37,8 +37,8 @@ class GlobalConfig:
             "prevSongMidiNote": self.prevSongMidiNote,
             "nextSongMidiNote": self.nextSongMidiNote,
             "resetSongMidiNote": self.resetSongMidiNote,
-            "shutdownPiMidiNote": self.shutdownPiMidiNote,
-            "startStopSongMidiNote": self.startStopSongMidiNote
+            "startStopSongMidiNote": self.startStopSongMidiNote,
+            "shutdownPiMidiNote": self.shutdownPiMidiNote
         }
 
     # Define a class method to create an instance from a JSON dictionary
