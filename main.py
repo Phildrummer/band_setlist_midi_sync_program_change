@@ -129,7 +129,7 @@ if __name__ == "__main__":
                             elif msg.note == config.shutdownPiMidiNote:
                                 print('PROCESSING: Shutting down')
                                 lcd.clear()
-                                lcd.write('Shutting down the Pi...')
+                                lcd.write_string('Shutting down the Pi...')
                                 time.sleep(3)
                                 lcd.clear()
                                 subprocess.call(['sudo', 'shutdown','-h','now'])
@@ -156,7 +156,7 @@ if __name__ == "__main__":
                                 outPort.send(pc)
                                 print (f"DONE: Changed kit to {allSongs[currentIdx].songname} --> tempo {allSongs[currentIdx].tempo} BPM")
                                 lcd.clear()
-                                lcd.write(f'Song: {allSongs[currentIdx].songname}\n\rTempo: {allSongs[currentIdx].tempo} BPM')
+                                lcd.write_string(f'Song: {allSongs[currentIdx].songname}\n\rTempo: {allSongs[currentIdx].tempo} BPM')
 
                             
                             if currentIdx == -1:
